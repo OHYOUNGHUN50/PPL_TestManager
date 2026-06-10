@@ -552,7 +552,6 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const STORE_KEY = 'ppl_app_v1';
   // ══ 상태 ══
 let brands=[], settings={sheetsUrl:''}, selectedBrandId=null, currentDetailBrandId=null;
 let commonCards={realCheck:'',realCredit:'',realDual:'',apple:'',xiaomi:'',huawei:'',qr:''};
@@ -572,18 +571,31 @@ const CARD_METHODS = ['IC 인서트', '실물 NFC', 'QR CPM'];
 const DUAL_ITEMS = []; // 듀얼 없음
 
 // ══ 로컬 설정 ══
+const STORE_KEY = 'ppl_app_v1'; // 💡 다음 개별 프로젝트 때는 이 이름만 'ppl_app_v2' 등으로 바꿔주시면 됩니다.
+
 function loadLocalSettings(){
   try{
-    const s = localStorage.getItem(STORE_KEY + '_settings');if(s)settings=JSON.parse(s);
-    const ov=localStorage.getItem('upi_overrides');if(ov)overrides=JSON.parse(ov);
+    const s = localStorage.getItem(STORE_KEY + '_settings'); if(s) settings = JSON.parse(s);
+    // 오버라이드 데이터도 다른 프로젝트와 섞이지 않도록 고유 키를 적용했습니다.
+    const ov = localStorage.getItem(STORE_KEY + '_overrides'); if(ov) overrides = JSON.parse(ov);
   }catch(e){}
 }
-function saveLocalOverrides(){try{localStorage.setItem('upi_overrides',JSON.stringify(overrides));}catch(e){}}
+
+function saveLocalOverrides(){
+  try{
+    localStorage.setItem(STORE_KEY + '_overrides', JSON.stringify(overrides));
+  }catch(e){}
+}
+
 function saveSettings(){
-  settings.sheetsUrl=document.getElementById('sheetsUrlInput').value.trim();
-  try{localStorage.setItem('upi_settings',JSON.stringify(settings));}catch(e){}
-  closeModal('settingsModal');showToast('✅ 설정이 저장되었습니다.');
-  if(settings.sheetsUrl)loadBrandsFromSheets();
+  settings.sheetsUrl = document.getElementById('sheetsUrlInput').value.trim();
+  try{
+    // [수정 완료] 이제 불러올 때와 마찬가지로 고유 키 명칭으로 안전하게 저장됩니다.
+    localStorage.setItem(STORE_KEY + '_settings', JSON.stringify(settings));
+  }catch(e){}
+  closeModal('settingsModal');
+  showToast('✅ 설정이 저장되었습니다.');
+  if(settings.sheetsUrl) loadBrandsFromSheets();
 }
 
 // ══ Sheets API ══
