@@ -552,7 +552,8 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ══ 상태 ══
+const STORE_KEY = 'ppl_app_v1';
+  // ══ 상태 ══
 let brands=[], settings={sheetsUrl:''}, selectedBrandId=null, currentDetailBrandId=null;
 let commonCards={realCheck:'',realCredit:'',realDual:'',apple:'',xiaomi:'',huawei:'',qr:''};
 const initRecord=()=>({category:'',subCategory:'',amount:'',hotkey:'N/A',brandSelection:'N/A',pinOut:'N/A',pinIn:'N/A',pinBypass:'N/A',qpsStatus:'N/A',status:'N/A',memo:''});
